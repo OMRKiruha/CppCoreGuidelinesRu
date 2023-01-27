@@ -1,73 +1,73 @@
 # <a name="main"></a>C++ Core Guidelines
 
-October 6, 2022
+Октябрь 6, 2022
 
-Editors:
+Редакторы:
 
 * [Bjarne Stroustrup](http://www.stroustrup.com)
 * [Herb Sutter](http://herbsutter.com/)
 
-This is a living document under continuous improvement.
-Had it been an open-source (code) project, this would have been release 0.8.
-Copying, use, modification, and creation of derivative works from this project is licensed under an MIT-style license.
-Contributing to this project requires agreeing to a Contributor License. See the accompanying [LICENSE](LICENSE) file for details.
-We make this project available to "friendly users" to use, copy, modify, and derive from, hoping for constructive input.
+Это живой документ, который постоянно совершенствуется.
+Если бы это был проект с открытым исходным кодом, версия 0.8.
+Копирование, использование, модификация и создание производных работ из этого проекта лицензированы по лицензии MIT-style.
+Для участия в этом проекте требуется согласие с лицензией участника. Смотрите прилагаемый файл [ЛИЦЕНЗИИ](LICENSE) для получения подробной информации.
+Мы делаем этот проект доступным для "дружественных пользователей" для использования, копирования, модификации и извлечения из него результатов, надеясь на конструктивный вклад.
 
-Comments and suggestions for improvements are most welcome.
-We plan to modify and extend this document as our understanding improves and the language and the set of available libraries improve.
-When commenting, please note [the introduction](#S-introduction) that outlines our aims and general approach.
-The list of contributors is [here](#SS-ack).
+Комментарии и предложения по улучшению приветствуются.
+Мы планируем изменять и расширять этот документ по мере улучшения нашего понимания, а также улучшения языка и набора доступных библиотек.
+При комментировании, пожалуйста, обратите внимание на [введение](#S-introduction), в котором излагаются наши цели и общий подход.
+Список участников находится [здесь](#SS-ack).
 
-Problems:
+Проблемы:
 
-* The sets of rules have not been completely checked for completeness, consistency, or enforceability.
-* Triple question marks (???) mark known missing information
-* Update reference sections; many pre-C++11 sources are too old.
-* For a more-or-less up-to-date to-do list see: [To-do: Unclassified proto-rules](#S-unclassified)
+* Наборы правил не были полностью проверены на предмет полноты, согласованности или применимости.
+* Тройные вопросительные знаки (???) обозначают известную недостающую информацию
+* Обновите справочные разделы; многие исходные тексты до C++11 слишком устарели.
+* Более или менее актуальный список дел см.: [To-do: Неклассифицированные протоправила](#S-unclassified)
 
-You can [read an explanation of the scope and structure of this Guide](#S-abstract) or just jump straight in:
+Вы можете [прочитать объяснение объема и структуры этого руководства](#S-аннотация) или просто сразу перейти к:
 
-* [In: Introduction](#S-introduction)
-* [P: Philosophy](#S-philosophy)
-* [I: Interfaces](#S-interfaces)
-* [F: Functions](#S-functions)
-* [C: Classes and class hierarchies](#S-class)
-* [Enum: Enumerations](#S-enum)
-* [R: Resource management](#S-resource)
-* [ES: Expressions and statements](#S-expr)
-* [Per: Performance](#S-performance)
-* [CP: Concurrency and parallelism](#S-concurrency)
-* [E: Error handling](#S-errors)
-* [Con: Constants and immutability](#S-const)
-* [T: Templates and generic programming](#S-templates)
-* [CPL: C-style programming](#S-cpl)
-* [SF: Source files](#S-source)
-* [SL: The Standard Library](#S-stdlib)
+* [In: Введение](#S-introduction)
+* [P: Философия](#S-philosophy)
+* [I: Интерфейсы](#S-interfaces)
+* [F: Функции](#S-functions)
+* [C: Классы и иерархия классов](#S-class)
+* [Enum: Перечисления](#S-enum)
+* [R: Управление ресурсами](#S-resource)
+* [ES: Выражения и операторы](#S-expr)
+* [Per: Производительность](#S-performance)
+* [CP: Конкурентность и паралеллизм](#S-concurrency)
+* [E: Обработка ошибок](#S-errors)
+* [Con: Константы и иммутабельность](#S-const)
+* [T: Шаблоны и обобщённое программирование](#S-templates)
+* [CPL: C-style программирование](#S-cpl)
+* [SF: Исходники](#S-source)
+* [SL: Стандартная библиотека STL](#S-stdlib)
 
-Supporting sections:
+вспомогательные разделы:
 
-* [A: Architectural ideas](#S-A)
-* [NR: Non-Rules and myths](#S-not)
-* [RF: References](#S-references)
-* [Pro: Profiles](#S-profile)
+* [A: Архитектурные идеи](#S-A)
+* [NR: Не-правила и мифы](#S-not)
+* [RF: Рекомендации](#S-references)
+* [Pro: Профили](#S-profile)
 * [GSL: Guidelines support library](#S-gsl)
-* [NL: Naming and layout suggestions](#S-naming)
-* [FAQ: Answers to frequently asked questions](#S-faq)
-* [Appendix A: Libraries](#S-libraries)
-* [Appendix B: Modernizing code](#S-modernizing)
-* [Appendix C: Discussion](#S-discussion)
-* [Appendix D: Supporting tools](#S-tools)
-* [Glossary](#S-glossary)
-* [To-do: Unclassified proto-rules](#S-unclassified)
+* [NL: Предложения по наименованию и компоновке](#S-naming)
+* [FAQ: Ответы на часто задаваемые вопросы](#S-faq)
+* [Приложение A: Библиотеки](#S-libraries)
+* [Приложение B: Модернизация кода](#S-modernizing)
+* [Приложение C: Обсуждение](#S-discussion)
+* [Приложение D: Вспомогательные инструменты](#S-tools)
+* [Глоссарий](#S-glossary)
+* [To-do: Неклассифицированные протоправила](#S-unclassified)
 
-You can sample rules for specific language features:
+Вы можете посмотреть примеры и правила для конкретных языковых функций:
 
-* assignment:
-[regular types](#Rc-regular) --
+* назначение:
+[обычные типы](#Rc-regular) --
 [prefer initialization](#Rc-initialize) --
-[copy](#Rc-copy-semantic) --
-[move](#Rc-move-semantic) --
-[other operations](#Rc-matched) --
+[copy-семантика](#Rc-copy-semantic) --
+[move-семантика](#Rc-move-semantic) --
+[Другие операции](#Rc-matched) --
 [default](#Rc-eqdefault)
 * `class`:
 [data](#Rc-org) --
@@ -169,62 +169,62 @@ You can sample rules for specific language features:
 [destructor](#Rc-dtor-virtual) --
 [never fail](#Rc-dtor-fail)
 
-You can look at design concepts used to express the rules:
+Вы можете ознакомиться с концепциями дизайна, используемыми для выражения правил:
 
-* assertion: ???
-* error: ???
-* exception: exception guarantee (???)
-* failure: ???
-* invariant: ???
-* leak: ???
-* library: ???
-* precondition: ???
-* postcondition: ???
-* resource: ???
+* утверждение: ???
+* ошибка: ???
+* исключение: гарантия исключения (???)
+* сбой: ???
+* инвариант: ???
+* утечка: ???
+* библиотека: ???
+* предварительное условие: ???
+* постусловие: ???
+* ресурс: ???
 
 # <a name="S-abstract"></a>Abstract
 
-This document is a set of guidelines for using C++ well.
-The aim of this document is to help people to use modern C++ effectively.
-By "modern C++" we mean effective use of the ISO C++ standard (currently C++20, but almost all of our recommendations also apply to C++17, C++14 and C++11).
-In other words, what would you like your code to look like in 5 years' time, given that you can start now? In 10 years' time?
+Этот документ представляет собой набор рекомендаций по правильному использованию C++.
+Цель этого документа - помочь людям эффективно использовать современный C++.
+Под "современным C++" мы подразумеваем эффективное использование стандарта ISO C++ (в настоящее время C++ 20, но почти все наши рекомендации также применимы к C++ 17, C++14 и C++11).
+Другими словами, как бы вы хотели, чтобы ваш код выглядел через 5 лет, учитывая, что вы можете начать прямо сейчас? Через 10 лет?
 
-The guidelines are focused on relatively high-level issues, such as interfaces, resource management, memory management, and concurrency.
-Such rules affect application architecture and library design.
-Following the rules will lead to code that is statically type safe, has no resource leaks, and catches many more programming logic errors than is common in code today.
-And it will run fast -- you can afford to do things right.
+Руководство сосредоточено на вопросах относительно высокого уровня, таких как интерфейсы, управление ресурсами, управление памятью и параллелизм.
+Такие правила влияют на архитектуру приложения и дизайн библиотеки.
+Следование правилам приведет к созданию кода, который статически типобезопасен, не имеет утечек ресурсов и выявляет гораздо больше логических ошибок программирования, чем это обычно встречается в коде сегодня.
+И это будет происходить быстро - вы можете позволить себе делать все правильно.
 
-We are less concerned with low-level issues, such as naming conventions and indentation style.
-However, no topic that can help a programmer is out of bounds.
+Нас меньше волнуют проблемы низкого уровня, такие как соглашения об именовании и стиль отступов.
+Однако ни одна тема, которая может помочь программисту, не выходит за рамки.
 
-Our initial set of rules emphasizes safety (of various forms) and simplicity.
-They might very well be too strict.
-We expect to have to introduce more exceptions to better accommodate real-world needs.
-We also need more rules.
+Наш первоначальный набор правил подчеркивает безопасность (в различных формах) и простоту.
+Они вполне могут быть слишком строгими.
+Мы ожидаем, что нам придется ввести больше исключений, чтобы лучше соответствовать реальным потребностям.
+Нам также нужно больше правил.
 
-You will find some of the rules contrary to your expectations or even contrary to your experience.
-If we haven't suggested you change your coding style in any way, we have failed!
-Please try to verify or disprove rules!
-In particular, we'd really like to have some of our rules backed up with measurements or better examples.
+Вы обнаружите, что некоторые правила противоречат вашим ожиданиям или даже вашему опыту.
+Если мы каким-либо образом не предложили вам изменить свой стиль кодирования, мы потерпели неудачу!
+Пожалуйста, попробуйте подтвердить или опровергнуть правила!
+В частности, нам бы очень хотелось, чтобы некоторые из наших правил были подкреплены измерениями или лучшими примерами.
 
-You will find some of the rules obvious or even trivial.
-Please remember that one purpose of a guideline is to help someone who is less experienced or coming from a different background or language to get up to speed.
+Некоторые правила покажутся вам очевидными или даже тривиальными.
+Пожалуйста, помните, что одна из целей руководства - помочь кому-то, у кого меньше опыта или кто говорит на другом языке, войти в курс дела.
 
-Many of the rules are designed to be supported by an analysis tool.
-Violations of rules will be flagged with references (or links) to the relevant rule.
-We do not expect you to memorize all the rules before trying to write code.
-One way of thinking about these guidelines is as a specification for tools that happens to be readable by humans.
+Множество правил разработаны при условии использования инструментов анализа кода.
+Нарушения правил будут помечены ссылками на соответствующее правило.
+Мы не ожидаем, что вы запомните все правила, прежде чем начнёте пытаться писать код.
+Один из способов думать об этих рекомендациях - это спецификация инструментов, которые могут быть прочитаны людьми.
 
-The rules are meant for gradual introduction into a code base.
-We plan to build tools for that and hope others will too.
+Правила предназначены для постепенного внедрения в кодовую базу.
+Мы планируем создать инструменты для этого и надеемся, что другие тоже это сделают.
 
-Comments and suggestions for improvements are most welcome.
-We plan to modify and extend this document as our understanding improves and the language and the set of available libraries improve.
+Комментарии и предложения по улучшению приветствуются.
+Мы планируем изменять и расширять этот документ по мере улучшения нашего понимания, а также улучшения языка и набора доступных библиотек.
 
-# <a name="S-introduction"></a>In: Introduction
+# <a name="S-introduction"></a>In: Введение
 
-This is a set of core guidelines for modern C++ (currently C++20 and C++17) taking likely future enhancements and ISO Technical Specifications (TSs) into account.
-The aim is to help C++ programmers to write simpler, more efficient, more maintainable code.
+Это набор основных рекомендаций для современного C++ (в настоящее время C++20 и C++17), учитывающих возможные будущие усовершенствования и технические спецификации ISO.
+Цель состоит в том, чтобы помочь программистам на C++ писать более простой, эффективный и "ремонтопригодный" код.
 
 Introduction summary:
 
