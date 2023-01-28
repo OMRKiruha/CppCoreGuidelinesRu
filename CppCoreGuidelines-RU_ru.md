@@ -463,7 +463,7 @@ These sections are not orthogonal.
 
 * [P.1: Выражайте идеи непосредственно в коде](#Rp-direct)
 * [P.2: Пишите на стандартном ISO C++](#Rp-Cplusplus)
-* [P.3: Выражайте намерение](#Rp-what)
+* [P.3: Выражайте назначение](#Rp-what)
 * [P.4: В идеале программа должна быть статически типобезопасной](#Rp-typesafe)
 * [P.5: Предпочтительнее проверка на этапе компиляции проверке времени выполнения](#Rp-compile-time)
 * [P.6: То, что не может быть проверено во время компиляции, должно быть проверяемо во время выполнения](#Rp-run-time)
@@ -517,7 +517,7 @@ These sections are not orthogonal.
         // ...
     }
 
-##### Пример, good
+##### Хороший пример
 
 Гораздо более ясным выражением намерения было бы:
 
@@ -530,11 +530,11 @@ These sections are not orthogonal.
         // ...
     }
 
-Хорошо спроектированная библиотека выражает намерение (что должно быть сделано, а не просто как что-то делается) гораздо лучше, чем прямое использование языковых функций.
+Хорошо спроектированная библиотека выражает назначение (что должно быть сделано, а не просто как что-то делается) гораздо лучше, чем прямое использование языковых функций.
 
 Программист на C++ должен знать основы стандартной библиотеки и использовать ее там, где это уместно.
 Любой программист должен знать основы базовых библиотек проекта, над которым он работает, и использовать их соответствующим образом.
-Любой программист, использующий эти рекомендации, должен знать [guidelines support library] (#S-gsl) и использовать ее надлежащим образом.
+Любой программист, использующий эти рекомендации, должен знать [guidelines support library](#S-gsl) и использовать ее надлежащим образом.
 
 ##### Пример
 
@@ -542,61 +542,56 @@ These sections are not orthogonal.
     // ...
     change_speed(2.3);
 
-A better approach is to be explicit about the meaning of the double (new speed or delta on old speed?) and the unit used:
+Лучший подход заключается в том, чтобы четко указать значение double (новая скорость или дельта на старой скорости?) и используемую единицу измерения:
 
     change_speed(Speed s);    // better: the meaning of s is specified
     // ...
     change_speed(2.3);        // error: no unit
     change_speed(23_m / 10s);  // meters per second
 
-We could have accepted a plain (unit-less) `double` as a delta, but that would have been error-prone.
-If we wanted both absolute speed and deltas, we would have defined a `Delta` type.
+Мы могли бы принять обычный (без единиц измерения) `double` в качестве дельты, но это было бы чревато ошибками.
+Если бы нам нужна была как абсолютная скорость, так и дельты, мы бы определили тип `Delta`.
 
 ##### Применение
 
-Very hard in general.
+В общем, очень тяжело.
 
-* use `const` consistently (check if member functions modify their object; check if functions modify arguments passed by pointer or reference)
-* flag uses of casts (casts neuter the type system)
-* detect code that mimics the standard library (hard)
+* используйте `const` последовательно (проверьте, изменяют ли функции-члены свой объект; проверьте, изменяют ли функции аргументы, передаваемые указателем или ссылкой)
+* отмечайте использование приведений (приведения нейтрализуют систему типов)
+* (жестко) отслеживайте самописный код, реализующий те же функции что есть в стандартной библиотеке 
 
-### <a name="Rp-Cplusplus"></a>P.2: Write in ISO Standard C++
+### <a name="Rp-Cplusplus"></a>P.2: Пишите на стандартном ISO C++
 
 ##### Обоснование
 
-This is a set of guidelines for writing ISO Standard C++.
+Это набор рекомендаций по написанию в стиле стандарта ISO C++.
 
 ##### Примечание
 
-There are environments where extensions are necessary, e.g., to access system resources.
-In such cases, localize the use of necessary extensions and control their use with non-core Coding Guidelines.  If possible, build interfaces that encapsulate the extensions so they can be turned off or compiled away on systems that do not support those extensions.
+Существуют среды, в которых расширения необходимы, например, для доступа к системным ресурсам.
+В таких случаях локализуйте использование необходимых расширений и контролируйте их использование с помощью неосновных руководств по программированию. Если возможно, создайте интерфейсы, которые инкапсулируют расширения, чтобы их можно было отключить или скомпилировать в системах, которые не поддерживают эти расширения.
 
-Extensions often do not have rigorously defined semantics.  Even extensions that
-are common and implemented by multiple compilers might have slightly different
-behaviors and edge case behavior as a direct result of *not* having a rigorous
-standard definition.  With sufficient use of any such extension, expected
-portability will be impacted.
+Расширения часто не имеют строго определенной семантики. Даже расширения, которые являются общими и реализуются несколькими компиляторами, могут иметь несколько различающееся поведение и граничный регистр как прямой результат отсутствия строгого стандартного определения. При достаточном использовании любого такого расширения это снизит переносимость кода.
 
 ##### Примечание
 
-Using valid ISO C++ does not guarantee portability (let alone correctness).
-Avoid dependence on undefined behavior (e.g., [undefined order of evaluation](#Res-order))
-and be aware of constructs with implementation defined meaning (e.g., `sizeof(int)`).
+Использование действительного ISO C++ не гарантирует переносимости (не говоря уже о корректности).
+Избегайте зависимости от неопределенного поведения (например, [неопределенный порядок вычисления](#Res-order)) и будьте осведомлены о конструкциях с определенным реализацией значением (например, `sizeof(int)`).
 
 ##### Примечание
 
-There are environments where restrictions on use of standard C++ language or library features are necessary, e.g., to avoid dynamic memory allocation as required by aircraft control software standards.
-In such cases, control their (dis)use with an extension of these Coding Guidelines customized to the specific environment.
+Существуют среды, в которых необходимы ограничения на использование стандартного языка C++ или библиотечных функций, например, чтобы избежать динамического выделения памяти, как того требуют стандарты программного обеспечения для управления воздушным судном.
+В таких случаях контролируйте их (не)использование с помощью расширения этих руководств по программированию, адаптированных к конкретной среде.
 
 ##### Применение
 
-Use an up-to-date C++ compiler (currently C++20 or C++17) with a set of options that do not accept extensions.
+Используйте современный компилятор C++ (в настоящее время C++20 или C++17) с набором опций, которые не принимают расширения.
 
-### <a name="Rp-what"></a>P.3: Express intent
+### <a name="Rp-what"></a>P.3: Выражайте назначение
 
 ##### Обоснование
 
-Unless the intent of some code is stated (e.g., in names or comments), it is impossible to tell whether the code does what it is supposed to do.
+Если не указано назначение какого-либо кода (например, в именах или комментариях), невозможно определить, выполняет ли код то, что он должен делать.
 
 ##### Пример
 
@@ -605,125 +600,125 @@ Unless the intent of some code is stated (e.g., in names or comments), it is imp
         // ... do something with v[i] ...
     }
 
-The intent of "just" looping over the elements of `v` is not expressed here. The implementation detail of an index is exposed (so that it might be misused), and `i` outlives the scope of the loop, which might or might not be intended. The reader cannot know from just this section of code.
+Назначение "просто" перебирать элементы `v` здесь не выражено. Не раскрыты детали реализации индекса (так что он может быть использован не по назначению), и `i` выходит за рамки цикла, который может быть предназначен, а может и не быть. Читатель не может узнать только из этого раздела кода.
 
-Better:
+Лучше:
 
     for (const auto& x : v) { /* do something with the value of x */ }
 
-Now, there is no explicit mention of the iteration mechanism, and the loop operates on a reference to `const` elements so that accidental modification cannot happen. If modification is desired, say so:
+Теперь нет явного упоминания о механизме итерации, и цикл работает со ссылкой на элементы `const`, так что случайная модификация не может произойти. Если требуется изменение, скажите об этом:
 
     for (auto& x : v) { /* modify x */ }
 
-For more details about for-statements, see [ES.71](#Res-for-range).
-Sometimes better still, use a named algorithm. This example uses the `for_each` from the Ranges TS because it directly expresses the intent:
+Для получения более подробной информации о for-операторах см. [ES.71](#Res-for-range).
+Иногда еще лучше использовать именованный алгоритм. В этом примере используется `for_each` из Ranges TS, поскольку он непосредственно выражает намерение:
 
     for_each(v, [](int x) { /* do something with the value of x */ });
     for_each(par, v, [](int x) { /* do something with the value of x */ });
 
-The last variant makes it clear that we are not interested in the order in which the elements of `v` are handled.
+Последний вариант дает понять, что нас не интересует порядок, в котором обрабатываются элементы `v`.
 
-A programmer should be familiar with
+Программист должен быть знаком с
 
 * [The guidelines support library](#S-gsl)
 * [The ISO C++ Standard Library](#S-stdlib)
-* Whatever foundation libraries are used for the current project(s)
+* Любой основной библиотекой, используемой на конкретном проекте
 
 ##### Примечание
 
-Alternative formulation: Say what should be done, rather than just how it should be done.
+Альтернативная формулировка: скажите, что должно быть сделано, а не просто как это должно быть сделано.
 
 ##### Примечание
 
-Some language constructs express intent better than others.
+Некоторые языковые конструкции выражают назначение лучше, чем другие.
 
 ##### Пример
 
-If two `int`s are meant to be the coordinates of a 2D point, say so:
+Если два `int`а должны быть координатами 2D-точки, скажем так:
 
-    draw_line(int, int, int, int);  // obscure
-    draw_line(Point, Point);        // clearer
+    draw_line(int, int, int, int);  // неяснно
+    draw_line(Point, Point);        // яснее
 
 ##### Применение
 
-Look for common patterns for which there are better alternatives
+Ищите общие шаблоны, для которых есть лучшие альтернативы
 
-* simple `for` loops vs. range-`for` loops
-* `f(T*, int)` interfaces vs. `f(span<T>)` interfaces
-* loop variables in too large a scope
-* naked `new` and `delete`
-* functions with many parameters of built-in types
+* простые циклы `for` по сравнению с циклами диапазоными `for`
+* интерфейсы `f(T*, int)` против интерфейсов `f(span<T>)`
+* переменные цикла в слишком большой области видимости
+* голые `new` и `delete`
+* функции со множеством параметров встроенных типов
 
-There is a huge scope for cleverness and semi-automated program transformation.
+Существует огромный простор для интеллектуального и полуавтоматического преобразования программ.
 
-### <a name="Rp-typesafe"></a>P.4: Ideally, a program should be statically type safe
+### <a name="Rp-typesafe"></a>P.4: В идеале программа должна быть статически типобезопасной
 
 ##### Обоснование
 
-Ideally, a program would be completely statically (compile-time) type safe.
-Unfortunately, that is not possible. Problem areas:
+В идеале программа должна быть полностью статически (во время компиляции) типобезопасной.
+К сожалению, это невозможно. Проблемные области:
 
-* unions
-* casts
-* array decay
-* range errors
-* narrowing conversions
+* объединения (unions)
+* приведения типов (casts)
+* разрушение массива (array decay)
+* ошибки диапазона (range errors)
+* сужающее преобразование (narrowing conversions)
 
 ##### Примечание
 
-These areas are sources of serious problems (e.g., crashes and security violations).
-We try to provide alternative techniques.
+Эти области являются источниками серьезных проблем (например, сбоев и нарушений безопасности).
+Мы стараемся предложить альтернативные методы.
 
 ##### Применение
 
-We can ban, restrain, or detect the individual problem categories separately, as required and feasible for individual programs.
-Always suggest an alternative.
-For example:
+Мы можем запретить, ограничить или отслеживать отдельные категории проблем по отдельности, по необходимости и применимости для отдельных программ.
+Всегда предлагайте альтернативу.
+Например:
 
-* unions -- use `variant` (in C++17)
-* casts -- minimize their use; templates can help
-* array decay -- use `span` (from the GSL)
-* range errors -- use `span`
-* narrowing conversions -- minimize their use and use `narrow` or `narrow_cast` (from the GSL) where they are necessary
+* объединения - используйте `variant` (в C++17)
+* приведения типов - сведите к минимуму их использование; шаблоны могут помочь
+* разрушение массива - используйте `span` (из GSL)
+* ошибки диапазона - используйте `span`
+* сужающее преобразование - сведите к минимуму их использование и используйте `narrow` или `narrow_cast` (из GSL) там, где они необходимы.
 
-### <a name="Rp-compile-time"></a>P.5: Prefer compile-time checking to run-time checking
+### <a name="Rp-compile-time"></a>P.5: Предпочтительнее проверка на этапе компиляции проверке времени выполнения
 
 ##### Обоснование
 
-Code clarity and performance.
-You don't need to write error handlers for errors caught at compile time.
+Ясность кода и производительность.
+Вам не нужно писать обработчики ошибок для ошибок, обнаруженных во время компиляции.
 
 ##### Пример
 
-    // Int is an alias used for integers
-    int bits = 0;         // don't: avoidable code
+    // Int - это псевдоним, используемый для целых чисел
+    int bits = 0;         // не надо: код, которого нужно избегать
     for (Int i = 1; i; i <<= 1)
         ++bits;
     if (bits < 32)
         cerr << "Int too small\n";
 
-This example fails to achieve what it is trying to achieve (because overflow is undefined) and should be replaced with a simple `static_assert`:
+В этом примере не удается достичь того, чего он пытается достичь (поскольку переполнение не определено), и его следует заменить простым `static_assert`:
 
     // Int is an alias used for integers
     static_assert(sizeof(Int) >= 4);    // do: compile-time check
 
-Or better still just use the type system and replace `Int` with `int32_t`.
+Или еще лучше просто используйте систему типов и замените `Int` на `int32_t`.
 
 ##### Пример
 
-    void read(int* p, int n);   // read max n integers into *p
+    void read(int* p, int n);   // считать n целых в *p
 
     int a[100];
-    read(a, 1000);    // bad, off the end
+    read(a, 1000);    // плохо, выход за границы
 
-better
+лучше
 
-    void read(span<int> r); // read into the range of integers r
+    void read(span<int> r); // читать внутри диапазона целых r
 
     int a[100];
-    read(a);        // better: let the compiler figure out the number of elements
+    read(a);        // лучше: позвольте компилятору вычислить количество элементов
 
-**Alternative formulation**: Don't postpone to run time what can be done well at compile time.
+**Альтернативная формулировка**: Не откладывайте на время выполнения то, что можно хорошо сделать во время компиляции.
 
 ##### Применение
 
@@ -1277,10 +1272,10 @@ What if the connection goes down so that no logging output is produced? See I.??
 
 **Alternative**: Throw an exception. An exception cannot be ignored.
 
-**Alternative formulation**: Avoid passing information across an interface through non-local or implicit state.
+**Альтернативная формулировка**: Avoid passing information across an interface through non-local or implicit state.
 Note that non-`const` member functions pass information to other member functions through their object's state.
 
-**Alternative formulation**: An interface should be a function or a set of functions.
+**Альтернативная формулировка**: An interface should be a function or a set of functions.
 Functions can be function templates and sets of functions can be classes or class templates.
 
 ##### Применение
@@ -1495,7 +1490,7 @@ In the following example, it is not clear from the interface what `time_to_blink
         blink_led(2);
     }
 
-##### Пример, good
+##### Хороший пример
 
 `std::chrono::duration` types helps making the unit of time duration explicit.
 
@@ -2786,7 +2781,7 @@ Passing a shared smart pointer (e.g., `std::shared_ptr`) implies a run-time cost
     widget stack_widget;
     f(stack_widget); // error
 
-##### Пример, good
+##### Хороший пример
 
     // callee
     void f(widget& w)
@@ -3927,7 +3922,7 @@ With guaranteed copy elision, it is now almost always a pessimization to express
       return std::move(result);
     }
 
-##### Пример, good
+##### Хороший пример
 
     S f()
     {
@@ -4096,7 +4091,7 @@ Pointers and references to locals shouldn't outlive their scope. Lambdas that ca
     // process() call will have undefined behavior!
     thread_pool.queue_work([&] { process(local); });
 
-##### Пример, good
+##### Хороший пример
 
     int local = 42;
     // Want a copy of local.
@@ -4508,7 +4503,7 @@ Mixing a type definition and the definition of another entity in the same declar
 
     struct Data { /*...*/ } data{ /*...*/ };
 
-##### Пример, good
+##### Хороший пример
 
     struct Data { /*...*/ };
     Data data{ /*...*/ };
@@ -4928,7 +4923,7 @@ This is known as "the rule of five."
 If you want a default implementation (while defining another), write `=default` to show you're doing so intentionally for that function.
 If you don't want a generated default function, suppress it with `=delete`.
 
-##### Пример, good
+##### Хороший пример
 
 When a destructor needs to be declared just to make it `virtual`, it can be
 defined as defaulted.
@@ -5897,7 +5892,7 @@ How would a maintainer know whether `j` was deliberately uninitialized (probably
 
 An initialization explicitly states that initialization, rather than assignment, is done and can be more elegant and efficient. Prevents "use before set" errors.
 
-##### Пример, good
+##### Хороший пример
 
     class A {   // Good
         string s1;
@@ -6686,7 +6681,7 @@ However, experience shows that such calls are rarely needed, easily confuse main
 
 A `swap` can be handy for implementing a number of idioms, from smoothly moving objects around to implementing assignment easily to providing a guaranteed commit function that enables strongly error-safe calling code. Consider using swap to implement copy assignment in terms of copy construction. See also [destructors, deallocation, and swap must never fail](#Re-never-fail).
 
-##### Пример, good
+##### Хороший пример
 
     class Foo {
     public:
@@ -6883,7 +6878,7 @@ That tends to work better than "cleverness" for non-specialists.
 The standard C++ mechanism to construct an instance of a type is to call its constructor. As specified in guideline [C.41](#Rc-complete): a constructor should create a fully initialized object. No additional initialization, such as by `memcpy`, should be required.
 A type will provide a copy constructor and/or copy assignment operator to appropriately make a copy of the class, preserving the type's invariants.  Using memcpy to copy a non-trivially copyable type has undefined behavior.  Frequently this results in slicing, or data corruption.
 
-##### Пример, good
+##### Хороший пример
 
     struct base {
         virtual void update() = 0;
@@ -7388,7 +7383,7 @@ It's simple and clear:
         // ...
     };
 
-##### Пример, good
+##### Хороший пример
 
     struct Better : B {
         void f1(int) override;        // error (caught): Better::f1() hides B::f1()
@@ -7961,7 +7956,7 @@ Without a using declaration, member functions in the derived class hide the enti
         std::cout << d.f(2.3) << '\n'; // prints "f(int): 3"
     }
 
-##### Пример, good
+##### Хороший пример
 
     class D: public B {
     public:
@@ -10024,7 +10019,7 @@ Using `unique_ptr` in this way both documents and enforces the function call's r
 
 This makes the function's ownership sharing explicit.
 
-##### Пример, good
+##### Хороший пример
 
     class WidgetUser
     {
@@ -10053,7 +10048,7 @@ This makes the function's reseating explicit.
 
 "reseat" means "making a reference or a smart pointer refer to a different object."
 
-##### Пример, good
+##### Хороший пример
 
     void ChangeWidget(std::shared_ptr<widget>& w)
     {
@@ -10073,7 +10068,7 @@ This makes the function's reseating explicit.
 
 This makes the function's ??? explicit.
 
-##### Пример, good
+##### Хороший пример
 
     void share(shared_ptr<widget>);            // share -- "will" retain refcount
 
@@ -10351,7 +10346,7 @@ A declaration is a statement. A declaration introduces a name into a scope and m
 
 Readability. Minimize resource retention. Avoid accidental misuse of value.
 
-**Alternative formulation**: Don't declare a name in an unnecessarily large scope.
+**Альтернативная формулировка**: Don't declare a name in an unnecessarily large scope.
 
 ##### Пример
 
@@ -11293,7 +11288,7 @@ It nicely encapsulates local initialization, including cleaning up scratch varia
     }                                        // needed to initialize x
     // from here, x should be const, but we can't say so in code in this style
 
-##### Пример, good
+##### Хороший пример
 
     const widget x = [&] {
         widget val;                                // assume that widget has a default constructor
@@ -11660,7 +11655,7 @@ Access into an array with known bounds using a constant as a subscript can be va
         use(&p[0], 3);     // BAD
     }
 
-##### Пример, good
+##### Хороший пример
 
     void f(span<int> a) // BETTER: use span in the function declaration
     {
@@ -11696,7 +11691,7 @@ If iterators are needed to access an array, use the iterators from a `span` cons
         a[10] = 4;    // BAD (but easily caught by tools) -- no replacement, just don't do this
     }
 
-##### Пример, good
+##### Хороший пример
 
 Use a `span`:
 
@@ -11730,7 +11725,7 @@ Use `at()`:
             arr[i] = i; // BAD, cannot use non-constant indexer
     }
 
-##### Пример, good
+##### Хороший пример
 
 Use a `span`:
 
@@ -13573,7 +13568,7 @@ This also applies to `%`.
         return a / b;
     }
 
-##### Пример, good
+##### Хороший пример
 
     int divide(int a, int b)
     {
@@ -13686,7 +13681,7 @@ To avoid the pitfalls with `auto` and `int`.
     for (int i = vec.size()-1; i >= 0; i -= 2)                 // might not be big enough
         cout << vec[i] << '\n';
 
-##### Пример, good
+##### Хороший пример
 
     vector<int> vec = /*...*/;
 
@@ -13804,7 +13799,7 @@ href="#Rper-Knuth">Per.2</a>.)
 
 Simple code can be very fast. Optimizers sometimes do marvels with simple code
 
-##### Пример, good
+##### Хороший пример
 
     // clear expression of intent, fast execution
 
@@ -14258,7 +14253,7 @@ However, over time, code fragments can turn up in unexpected places.
 
 Although `cached_computation` works perfectly in a single-threaded environment, in a multi-threaded environment the two `static` variables result in data races and thus undefined behavior.
 
-##### Пример, good
+##### Хороший пример
 
     struct ComputationCache {
         int cached_x = 0;
@@ -15689,7 +15684,7 @@ The use of volatile does not make the first check thread-safe, see also [CP.200:
         }
     }
 
-##### Пример, good
+##### Хороший пример
 
     mutex action_mutex;
     atomic<bool> action_needed;
@@ -19226,7 +19221,7 @@ Including entities subject to the one-definition rule leads to linkage errors.
 
 Linking `file1.cpp` and `file2.cpp` will give two linker errors.
 
-**Alternative formulation**: A header file must contain only:
+**Альтернативная формулировка**: A header file must contain only:
 
 * `#include`s of other header files (possibly with include guards)
 * templates
@@ -19526,7 +19521,7 @@ or even an occasional "`string`s cannot be compared with `==`").
 
 The solution is to explicitly `#include <string>`:
 
-##### Пример, good
+##### Хороший пример
 
     #include <iostream>
     #include <string>
@@ -19901,7 +19896,7 @@ Such loops can be much faster than individually checked element accesses.
 
 Also, `std::array<>::fill()` or `std::fill()` or even an empty initializer are better candidates than `memset()`.
 
-##### Пример, good
+##### Хороший пример
 
     void f()
     {
@@ -20769,7 +20764,7 @@ and errors (when we didn't deal correctly with semi-constructed objects consiste
     }
     // now have an invalid picture object instance.
 
-##### Пример, good
+##### Хороший пример
 
     class Picture
     {
@@ -21472,7 +21467,7 @@ Minimize unintentional conversions.
     print_int(1);          // repetitive, manual type matching
     print_string("xyzzy"); // repetitive, manual type matching
 
-##### Пример, good
+##### Хороший пример
 
     void print(int i);
     void print(string_view);    // also works on any string-like sequence
@@ -22552,7 +22547,7 @@ Resource management rule summary:
 
 Prevent leaks. Leaks can lead to performance degradation, mysterious error, system crashes, and security violations.
 
-**Alternative formulation**: Have every resource represented as an object of some class managing its lifetime.
+**Альтернативная формулировка**: Have every resource represented as an object of some class managing its lifetime.
 
 ##### Пример
 
